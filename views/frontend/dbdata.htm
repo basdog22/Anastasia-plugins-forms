@@ -1,0 +1,29 @@
+
+{{ $rows->links() }}
+<table class="table table-bordered table-striped table-hover table-heading table-datatable" id="postslist">
+
+    <thead>
+    @foreach ($rows as $a=>$post)
+    @foreach($post as $k=>$attr)
+    @if($a===0)
+    <th>{{{$k}}}</th>
+    @endif
+    @endforeach
+    @endforeach
+    </thead>
+    <tbody>
+    @foreach ($rows as $post)
+
+    <tr>
+        @foreach($post as $attr)
+        <td>{{{$attr}}}</td>
+        @endforeach
+    </tr>
+    @endforeach
+
+
+    <!-- End: list_row -->
+    </tbody>
+
+</table>
+{{ $rows->links() }}

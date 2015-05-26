@@ -1,0 +1,12 @@
+<div style="width: 600px;margin: 0 auto;border:1px solid #ccc">
+    <h1>{{$form->title}}</h1>
+    <h2>Form Submition on your site</h2>
+    <h3>Form Data Follow:</h3>
+    <dl>
+
+    @foreach($data as $field=>$value)
+        <dt>{{$field}}</dt>
+        <dd>{{{$value}}}</dd>
+    @endforeach
+    </dl>
+</div>

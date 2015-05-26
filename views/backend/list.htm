@@ -1,0 +1,112 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="fa fa-cogs"></i>
+                    <span>{{ t('forms::strings.forms') }}</span>
+                </div>
+                <div class="box-icons col-sm-9">
+                    <span class="pull-left col-sm-9">
+                        <a href="{{url('backend/forms/list')}}">
+                            <i class="fa fa-file-o"></i>
+                            <span>{{ t('forms::strings.all') }}</span>
+                        </a>
+                        <a href="{{url('backend/forms/list/1')}}">
+                            <i class="fa fa-file"></i>
+                            <span>{{ t('forms::strings.published') }}</span>
+                        </a>
+                         <a href="{{url('backend/forms/list/0')}}">
+                             <i class="fa fa-file"></i>
+                             <span>{{ t('forms::strings.draft') }}</span>
+                         </a>
+                        <a href="{{url('backend/forms/list/2')}}">
+                            <i class="fa fa-trash"></i>
+                            <span>{{ t('forms::strings.trashed') }}</span>
+                        </a>
+                    </span>
+
+                    <span class="pull-right col-sm-3">
+                        <a href="{{url('backend/forms/new')}}">
+                            <i class="fa fa-plus"></i>
+                            <span>{{ t('forms::strings.new_form') }}</span>
+                        </a>
+                    </span>
+
+
+
+                </div>
+                <div class="no-move"></div>
+            </div>
+            <div class="box-content no-padding">
+                {{ $forms->links() }}
+                <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="postslist">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" class="checkall"></th>
+                        <th class="title-cell">{{ t('strings.title') }}</th>
+                        <th>{{ t('forms::strings.form_action') }}</th>
+                        <th id="actions_container" data-base="{{url('backend/forms')}}" data-actions="delete">{{ t('strings.dates') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($forms as $post)
+                    <tr>
+                        <td><input type="checkbox" class="checkme" value="{{ $post->id }}"></td>
+                        <td><a href="{{ url('backend/forms/edit/'.$post->id) }}">{{ $post->title }}</a> -
+                            <small>
+                                @if($post->status==2)
+                                {{t('forms::strings.trashed')}}
+                                @elseif($post->status==1)
+                                {{t('forms::strings.published')}}
+                                @else
+                                {{t('forms::strings.draft')}}
+                                @endif
+                            </small>
+                            <div class="quick-actions">
+                                <a class="ttips" title="{{t('strings.edit')}}" href="{{ url('backend/forms/edit/'.$post->id) }}"><i class="fa fa-edit"></i> {{t('strings.edit')}}</a>
+                                -
+                                @if($post->status==2)
+                                <a class="ttips link-warning" title="{{t('strings.restore')}}" href="{{ url('backend/forms/restore/'.$post->id) }}"><i class="fa fa-refresh"></i> {{t('strings.restore')}}</a>
+                                -
+                                @endif
+                                <a class="ttips link-danger delbtn" title="{{t('strings.delete')}}" href="{{ url('backend/forms/delete/'.$post->id) }}"><i class="fa fa-remove"></i> {{t('strings.delete')}}</a>
+                                -
+                                <a class="ttips" title="{{t('strings.preview')}}" target="_blank" href="{{url($post->slug)}}"><i class="fa fa-eye"></i> {{t('strings.preview')}}</a>
+                            </div>
+                         </td>
+
+                        <td>
+                            {{$post->action}}
+                        </td>
+                        <td>
+                            <small>{{ t('strings.created_at') }}<br/> {{ $post->created_at }}</small><br/>
+                            <small>{{ t('strings.updated_at') }}<br/> {{ $post->updated_at }}</small>
+                        </td>
+
+                    </tr>
+                    @endforeach
+
+
+                    <!-- End: list_row -->
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th><input type="checkbox" class="checkall"></th>
+                        <th class="title-cell">{{ t('strings.title') }}</th>
+                        <th>{{ t('forms::strings.form_action') }}</th>
+                        <th>{{ t('strings.dates') }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+                {{ $forms->links() }}
+            </div>
+            <div class="box-footer">
+                <select class="bulk_actions no-select2">
+                    <option value="0">{{t('strings.with_selected')}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,26 @@
+<script>
+    jQuery(document).ready(function($){
+        $(document).on('change','#form_action',function(){
+            if($(this).val()=='forms/savetodb'){
+                $("#action_object").remove();
+                $('<div id="action_object"><label for="action_object_field">Database Table:</label>{{ Form::select('action_object',get_db_tables(),"default",['class'=>'no-select2 form-control','id'=>'action_object_field','required'=>'required'])}}</div>').appendTo($(this).parent());
+            }else if($(this).val()=='forms/sendmail'){
+                $("#action_object").remove();
+                $("<div id='action_object'><label for='action_object_field'>E-mail:</label><input id='action_object_field' type='email' class='form-control' name='action_object' value='default@email.com' placeholder='E-mail...' required></div>").appendTo($(this).parent());
+            }else{
+                $("#action_object").remove();
+                $('<div id=\'action_object\'><label for=\'action_object_field\'>Survey Forms:</label>{{ Form::select('action_object[]',get_survey_forms(),null,['multiple'=>'multiple','class'=>'no-select2 form-control','id'=>'action_object_field'])}}</div>').appendTo($(this).parent());
+            }
+        });
+
+
+
+        $(document).on('change','.validator_select',function(){
+            $("#validator_params_"+$(this).attr('id')).remove();
+            if($(this).val().trim()){
+               $("<label id='validator_params_"+$(this).attr('id')+"'>Params:<input type='text'  class='form-control' name='validator_params_"+$(this).attr('name')+"' value='"+$(this).data('params')+"'></label>").appendTo($(this).parent());
+            }
+        });
+        $("#form_action,.validator_select").trigger('change');
+    });
+</script>

@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="fa fa-cogs"></i>
+                    <span>{{ t('strings.settings') }}</span>
+                </div>
+
+                <div class="no-move"></div>
+            </div>
+            <div class="box-content no-padding">
+                <table class="table table-bordered table-striped table-hover table-heading" id="addonstable">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" class="checkall"> </th>
+                        <th>{{ t('strings.name') }}</th>
+                        <th>{{ t('strings.value') }}</th>
+                        <th>{{ t('strings.autoload') }}</th>
+                        <th>{{ t('strings.actions') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($settings as $setting)
+                    {{ Form::open(array('url'=>'backend/forms/savesettings', 'class'=>'form-edituser')) }}
+                    {{ Form::hidden('id', $setting->id) }}
+                    {{ Form::hidden('namespace', $setting->namespace) }}
+                    <tr>
+                        <th><input type="checkbox" class="checkme" value="{{$setting->id}}"> </th>
+                        <th>{{ Form::text('setting_name',$setting->setting_name,['class'=>'form-control','placeholder'=>t('strings.setting_name')]) }}</th>
+                        <th>{{ Form::text('setting_value',$setting->setting_value,['class'=>'form-control','placeholder'=>t('strings.setting_value')]) }}</th>
+                        <th>{{ Form::checkbox('autoload',1,$setting->autoload) }}</th>
+                        <th>{{ Form::submit(t('strings.save_setting'), array('class'=>'btn btn-large btn-primary'))}}</th>
+                    </tr>
+                    {{ Form::close() }}
+                    @endforeach
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th><input type="checkbox" class="checkall"> </th>
+                        <th>{{ t('strings.name') }}</th>
+                        <th>{{ t('strings.value') }}</th>
+                        <th>{{ t('strings.autoload') }}</th>
+                        <th>{{ t('strings.actions') }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="col-md-12">
+    <h2 class="page-header"><a href="{{url($object->slug)}}" rel="bookmark">{{$object->title}}</a></h2>
+
+    <div class="panel-body">
+        {{$object->renderContent()}}
+    </div>
+
+    {{$object}}
+</div>

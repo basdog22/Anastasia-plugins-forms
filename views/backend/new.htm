@@ -1,0 +1,185 @@
+<div class="row">
+    {{ Form::open(array('url'=>'backend/forms/save', 'class'=>'form-newpage')) }}
+    <div class="col-md-9">
+        <div class="col-md-12 box widget-box">
+            <div class="box-header handle">
+                <div class="box-name">
+                    <span>
+                        @if(isset($form->id))
+                        {{ t('strings.edit') }}
+                        @else
+                        {{ t('strings.new') }}
+                        @endif
+                    </span>
+                </div>
+            </div>
+            <div class="box-content">
+
+                {{ Form::hidden('formid', $form->id) }}
+                {{ Form::label(t('strings.title')) }}
+                {{ Form::text('title', $form->title, array('class'=>'form-control', 'placeholder'=>t('strings.title'))) }}
+                {{place_slug($form)}}
+                {{ Form::label(t('strings.content')) }}
+                {{ Form::textarea('content', $form->content , array('class'=>'form-control rte','id'=>'post-content', 'placeholder'=>t('strings.content'))) }}
+            </div>
+
+
+        </div>
+        <div class="col-md-12 box widget-box">
+            <div class="box-header">
+                <div class="box-name">
+                    <span>{{t('forms::strings.fields')}}</span>
+                </div>
+            </div>
+            <div class="box-content">
+                <div class="row ">
+                    <table class="table table-bordered table-striped table-hover table-heading hastools" id="addonstable">
+                        <thead>
+                        <tr>
+                            <th>{{ t('forms::strings.required')}} </th>
+                            <th>{{ t('forms::strings.type') }}</th>
+                            <th>{{ t('forms::strings.label') }}</th>
+                            <th>{{ t('forms::strings.validator') }}</th>
+                            <th>{{ t('forms::strings.field_value') }}</th>
+                            <th>{{ t('forms::strings.default_value') }} <i class="fa fa-info ttips" title="{{t('forms::strings.default_value_help')}}"></i> </th>
+                        </tr>
+                        </thead>
+
+                        <tr class="cloneme removeme">
+                            <th>{{ Form::checkbox('newfields[0][required]', 1, false); }}</th>
+                            <th> {{ Form::select('newfields[0][type]',$form->fields_available) }}</th>
+                            <th>{{ Form::text('newfields[0][label]',null,['class'=>'form-control','placeholder'=>t('forms::strings.label')]) }}</th>
+                            <th>{{ Form::select('newfields[0][validator]',$form->validators,null,['data-params'=>'','id'=>'newvalidator','class'=>'validator_select']) }}</th>
+                            <th>{{ Form::textarea('newfields[0][field_value]',null,['class'=>'form-control','placeholder'=>t('forms::strings.field_value')]) }}</th>
+                            <th>{{ Form::textarea('newfields[0][default_value]',null,['class'=>'form-control','placeholder'=>t('forms::strings.default_value')]) }}</th>
+                        </tr>
+
+                        <tbody class="sortable">
+
+                        @foreach($form->fields as $field)
+                        <tr class="removeme">
+                            <th>{{ Form::checkbox("fields[$field->id][required]", 1, $field->required,['class'=>'checkme']); }}<br/><a class="move-activ"><i class="fa fa-arrows handle"></i></a>  </th>
+                            <th>{{ Form::select("fields[$field->id][type]",$form->fields_available,$field->field_type) }}</th>
+                            <th>{{ Form::text("fields[$field->id][label]",$field->label,['class'=>'form-control','placeholder'=>t('forms::strings.label')]) }}</th>
+                            <th>{{ Form::select("fields[$field->id][validator]",$form->validators,$field->validator,['data-params'=>$field->validator_params,'id'=>"validator_$field->id",'class'=>'validator_select']) }}</th>
+                            <th>{{ Form::textarea("fields[$field->id][field_value]",$field->field_value,['class'=>'form-control','placeholder'=>t('forms::strings.field_value')]) }}</th>
+                            <th>{{ Form::textarea("fields[$field->id][default_value]",$field->default_value,['class'=>'form-control','placeholder'=>t('forms::strings.default_value')]) }}</th>
+                        </tr>
+                        @endforeach
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th><input type="checkbox" class="checkall"> </th>
+                            <th>{{ t('forms::strings.type') }}</th>
+                            <th>{{ t('forms::strings.label') }}</th>
+                            <th>{{ t('forms::strings.validator') }}</th>
+                            <th>{{ t('forms::strings.field_value') }}</th>
+                            <th>{{ t('forms::strings.default_value') }}</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 box widget-box">
+            <div class="box-header">
+                <div class="box-name">
+                    <span>{{t('strings.revision_history')}}</span>
+                </div>
+            </div>
+            <div class="box-content">
+                <div class="row">
+                    <table class="col-md-12">
+                        <thead>
+                        <th>{{ t('strings.firstname') }} {{ t('strings.lastname') }}</th>
+                        <th>{{ t('strings.field')}}</th>
+                        <th>{{ t('strings.updated_at') }}</th>
+                        <th>{{ t('strings.actions') }}</th>
+                        </thead>
+                        <tbody>
+
+
+                        @foreach($form->revisionHistory as $history )
+                        <tr>
+                            <td><a class="btn btn-primary modal-link" href="{{ url('users/profile/'.$history->userResponsible()->id)}}">{{ $history->userResponsible()->firstname }}</a></td>
+                            <td>{{ $history->fieldName() }}</td>
+                            <td>{{ $history->created_at }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ url('backend/revisions/view/'.$history->id) }}" class="btn btn-primary modal-link">{{t('strings.view')}}</a>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row sortable" id="forms_widgets" rel="{{url('backend/forms')}}/">
+            <div class="col-md-11 box widget-box">
+                <div class="box-header handle">
+                    <div class="box-name">
+                        <span>{{ t('strings.publish') }}</span>
+                    </div>
+                    <div class="box-icons">
+                        <a href="#" class="move-activ"><i class="fa fa-arrows "></i></a>
+                    </div>
+                </div>
+                <div class="box-content">
+                    {{ Form::label(t('strings.status')) }}
+                    {{ Form::checkbox('status', 1,($form->status=='1')?true:false) }}
+                    <div class="clearfix"></div>
+                    {{ Form::label(t('forms::strings.form_method'))}}
+                    {{ Form::select('form_method',array('GET'=>'GET','POST'=>'POST'),$form->form_method) }}
+                    <div class="clearfix">
+                        {{ Form::label(t('forms::strings.form_action'))}}
+                        {{ Form::select('form_action',$form->actions,$form->action,['id'=>'form_action']) }}
+                    </div>
+
+                    <div class="clearfix">&nbsp;</div>
+                    {{ Form::submit(t('strings.save'), array('class'=>'btn btn-large btn-primary'))}}
+                    {{ Form::submit(t('strings.save_close'), array('class'=>'btn btn-large btn-primary','name'=>'saveclose'))}}
+                </div>
+
+            </div>
+
+                <div class="col-md-11 box widget-box">
+                    <div class="box-header handle">
+                        <div class="box-name">
+                            <span>{{ t('forms::strings.messages') }} <i class="fa fa-info ttips" title="{{t('forms::strings.url_to_redirect')}}"></i> </span>
+                        </div>
+                        <div class="box-icons">
+                            <a href="#" class="move-activ"><i class="fa fa-arrows "></i></a>
+                        </div>
+                    </div>
+                    <div class="box-content">
+                        <label for="success">{{t('forms::strings.success_message')}}</label>
+                        <textarea id="success" class="form-control" name="success_message">{{{$form->success_message}}}</textarea>
+                        <label for="failure">{{t('forms::strings.failure_message')}}</label>
+                        <textarea id="failure" class="form-control" name="failure_message">{{{$form->failure_message}}}</textarea>
+                    </div>
+                </div>
+        </div>{{ Form::close() }}
+        <div class="row">
+            <div class="col-md-11 box widget-box">
+                <div class="box-header handle">
+                    <div class="box-name">
+                        <span>{{ t('forms::strings.preview') }}</span>
+                    </div>
+                    <div class="box-icons">
+                        <a href="#" class="move-activ"><i class="fa fa-arrows "></i></a>
+                    </div>
+                </div>
+                <div class="box-content">
+                    {{$form}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
